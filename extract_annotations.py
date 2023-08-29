@@ -1,12 +1,18 @@
 import json
 import os
 import argparse
-from collections import defaultdict
 from tqdm import tqdm
 
+
 def find_tag(specific_token, dict_tags):
-    # The find_tag function remains the same
-    pass
+    for str_of_chars in dict_tags:
+        token_set = set(specific_token.split('_'))
+        chars_set = set(str_of_chars.split('_'))
+        common_ele = token_set.intersection(chars_set)
+        if len(common_ele) > 0:
+            return dict_tags[str_of_chars]
+    return 'O'
+
 
 def extract_from_json(input_path, lang):
     with open(input_path) as f:
@@ -24,8 +30,6 @@ def extract_from_json(input_path, lang):
             start_end_str = '_'.join([str(i) for i in range(start_idx, end_idx)])
             start_end_offset[start_end_str] = dict_token['display_name']
 
-        start_offsets = sorted(start_end_offset.keys())
-
         tokens = content.split()
         beg_idx = 0
         annotated_words = []
@@ -33,18 +37,20 @@ def extract_from_json(input_path, lang):
             tok_start_end_str = '_'.join([str(i) for i in range(beg_idx, beg_idx + len(tok))])
             tag = find_tag(tok_start_end_str, start_end_offset)
             annotated_words.append((tok, tag))
-            beg_idx += len(tok)+1
+            beg_idx += len(tok) + 1
 
         per_ann_sentences[reference] = annotated_words
 
     output_file = lang + '.tsv'
 
     with open(output_file, 'w') as f:
-        for reference, annotations in tqdm(per_ann_sentences.items(), desc=f'Writing data into {output_file}', total=len(per_ann_sentences)):
+        for reference, annotations in tqdm(per_ann_sentences.items(), desc=f'Writing data into {output_file}',
+                                           total=len(per_ann_sentences)):
             for word, tag in annotations:
                 f.write(f"{word}\t{tag}\n")
             f.write('\n')
     return "Extraction done"
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Extract NER data from JSON annotations.')
@@ -58,5 +64,3 @@ if __name__ == "__main__":
 
     lang = os.path.splitext(os.path.basename(input_path))[0]
     extract_from_json(input_path, output_path)
-
-## python script_name.py --input_path input.json --output_path output.tsv
