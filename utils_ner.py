@@ -132,6 +132,7 @@ def convert_examples_to_features(
     features = []
     for (ex_index, example) in enumerate(examples):
         # print(ex_index, len(example.words))
+        logger.info(f"Length of examples :   {len(examples)})
         if ex_index % 10000 == 0:
             logger.info("Writing example %d of %d", ex_index, len(examples))
 
