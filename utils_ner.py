@@ -82,7 +82,6 @@ def read_examples_from_file(data_dir, mode):
         words = []
         labels = []
         for line in f:
-            logger.info(line)
             line = line.strip()
             if len(line) < 2 or line == "\n":
                 # print(line, words)
@@ -93,7 +92,6 @@ def read_examples_from_file(data_dir, mode):
                     labels = []
             else:
                 splits = line.split(" ")
-                logger.info(splits)
                 words.append(splits[0])
                 if len(splits) > 1:
                     labels.append(splits[-1].replace("\n", ""))
@@ -103,6 +101,7 @@ def read_examples_from_file(data_dir, mode):
         if words:
             logger.info(words)
             examples.append(InputExample(guid="{}-{}".format(mode, guid_index), words=words, labels=labels))
+    logger.info(f"Length of examples: {len(examples)}")
     return examples
 
 
