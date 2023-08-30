@@ -100,6 +100,7 @@ def read_examples_from_file(data_dir, mode):
                     labels.append("O")
         if words:
             logger.info(words)
+            logger.info(len(words))
             examples.append(InputExample(guid="{}-{}".format(mode, guid_index), words=words, labels=labels))
     logger.info(f"Length of examples: {len(examples)}")
     return examples
