@@ -99,10 +99,7 @@ def read_examples_from_file(data_dir, mode):
                     # Examples could have no label for mode = "test"
                     labels.append("O")
         if words:
-            logger.info(words)
-            logger.info(len(words))
             examples.append(InputExample(guid="{}-{}".format(mode, guid_index), words=words, labels=labels))
-    logger.info(f"Length of examples: {len(examples)}")
     return examples
 
 
@@ -135,7 +132,6 @@ def convert_examples_to_features(
     features = []
     for (ex_index, example) in enumerate(examples):
         # print(ex_index, len(example.words))
-        logger.info(f"Length of examples :   {len(examples)}")
         if ex_index % 10000 == 0:
             logger.info("Writing example %d of %d", ex_index, len(examples))
 
